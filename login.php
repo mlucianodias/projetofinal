@@ -43,6 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="btn btn-primary w-100">Entrar</button>
         </form>
     </div>
-    
+    <footer>Powered by Luciano</footer>
 </body>
 </html>

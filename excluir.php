@@ -1,53 +1,34 @@
 <?php
-require_once 'config.php';
-
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-
-    // Prepara a exclusão da reserva com base no ID recebido
-    $sql = "DELETE FROM reservas WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Reserva excluída com sucesso!'); window.location.href='listagem.php';</script>";
-    } else {
-        echo "<script>alert('Erro ao excluir reserva!'); window.location.href='listagem.php';</script>";
-    }
-    $stmt->close();
-} else {
-    echo "<script>alert('ID de reserva inválido!'); window.location.href='listagem.php';</script>";
-}
-
-$conn->close();
-?>
-
-
-<?php
 session_start();
 require_once 'config.php';
 
-if (!isset($_SESSION['usuario_id'])) {
-    die("Você precisa estar logado para excluir uma reserva.");
+if (!isset($_SESSION["logado"]) || !$_SESSION["logado"]) {
+    header("Location: login.php");
+    exit;
 }
 
-$reserva_id = $_GET['id'];
-$usuario_id = $_SESSION['usuario_id'];
+$id = $_GET['id'];
+$usuario_logado = $_SESSION["usuario"];
 
-// Verifique se o usuário é o mesmo que fez a reserva
-$stmt = $conn->prepare("SELECT usuario_id FROM reservas WHERE id = ?");
-$stmt->bind_param("i", $reserva_id);
+// Busca o usuário que fez a reserva
+$sql = "SELECT usuario FROM reservas WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
 $stmt->execute();
-$stmt->bind_result($reserva_usuario_id);
-$stmt->fetch();
+$result = $stmt->get_result();
+$reserva = $result->fetch_assoc();
 
-if ($reserva_usuario_id == $usuario_id) {
-    // Usuário autorizado a excluir a reserva
-    $stmt = $conn->prepare("DELETE FROM reservas WHERE id = ?");
-    $stmt->bind_param("i", $reserva_id);
-    $stmt->execute();
-    echo "Reserva excluída com sucesso!";
+// Verifica se o usuário logado é o admin ou o criador da reserva
+if ($usuario_logado === "admin" || $usuario_logado === $reserva['usuario']) {
+    $sql = "DELETE FROM reservas WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    if ($stmt->execute()) {
+        echo "Reserva excluída com sucesso!";
+    } else {
+        echo "Erro ao excluir reserva!";
+    }
 } else {
-    echo "Você não tem permissão para excluir esta reserva.";
+    echo "Você não tem permissão para excluir esta reserva!";
 }
 ?>
