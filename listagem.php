@@ -40,6 +40,7 @@ $result = $conn->query($sql);
                     <td><?= $row["hora_inicio"]; ?></td>
                     <td><?= $row["hora_fim"]; ?></td>
                     <td>
+                        <a href="editar.php?id=<?= $row['id']; ?>" class="btn btn-warning">Editar</a>
                         <a href="excluir.php?id=<?= $row['id']; ?>" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta reserva?');">Excluir</a>
                     </td>
                 </tr>
