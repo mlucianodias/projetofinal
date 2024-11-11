@@ -100,11 +100,10 @@ $usuarios = $conn->query("SELECT * FROM usuarios ORDER BY nome");
                         <form method="POST" style="display:inline;">
                             <input type="hidden" name="acao" value="excluir">
                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirma a exclusão deste usuário?');">Excluir</button>
                         </form>
-
-                        <button class="btn btn-warning btn-sm" onclick="document.getElementById('alterar-senha-<?= $user['id'] ?>').style.display='block'">Alterar Senha</button>
                         <button class="btn btn-info btn-sm" onclick="document.getElementById('alterar-nome-<?= $user['id'] ?>').style.display='block'">Alterar Nome</button>
+                        <button class="btn btn-warning btn-sm" onclick="document.getElementById('alterar-senha-<?= $user['id'] ?>').style.display='block'">Alterar Senha</button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirma a exclusão deste usuário?');">Excluir</button>
                         
                         <div id="alterar-senha-<?= $user['id'] ?>" style="display:none;">
                             <form method="POST" class="mt-2">

@@ -62,11 +62,12 @@ if (!isset($_SESSION["logado"])) {
             <a href="listagem.php" class="btn btn-link d-block text-center mt-2">Ver salas reservadas</a>
         </form>
     </div>
-    <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) : ?>
-        <a href="cadastro.php" class="btn btn-success mt-3">Cadastrar Novo Usuário</a>
-    <?php endif; ?>
+    
     <footer class="mt-auto text-center">
-        <a href="logout.php" class="btn btn-danger logout-btn">Logout</a>
+    <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) : ?>
+        <a href="cadastro.php" class="btn btn-success mt-2">Cadastrar Novo Usuário</a>
+    <?php endif; ?>
+        <a href="logout.php" class="btn btn-danger logout-btn mt-2">Logout</a>
     </footer>
     <script src="js/index.js"></script>
 </body>

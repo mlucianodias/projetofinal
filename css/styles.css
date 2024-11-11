@@ -29,6 +29,115 @@ h2 {
     width: 100%;
 }
 
+h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form {
+    background: #e6e6e6;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    max-width: 500px;
+    width: 100%;
+}
+
+input, select, button {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+a {
+    color: #4CAF50;
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #45a049;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    input, select, button {
+        font-size: 0.9rem;
+    }
+
+    .form-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    input, select, button {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    .form-container {
+        padding: 10px;
+    }
+}
+
+
+
+
+/* Reset básico */
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.btn-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.logout-btn, .btn-primary, .btn-danger {
+    width: 100%;
+}
+
 
 h1 {
     font-size: 30px;
@@ -100,3 +209,4 @@ a:hover {
         font-size: 14px;
     }
 }
+ */
