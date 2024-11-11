@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
                 echo "<script>alert('Erro ao excluir reserva!'); window.location.href='listagem.php';</script>";
             }
         } else {
-            echo "<script>alert('Você não tem permissão para excluir esta reserva.'); window.location.href='listagem.php';</script>";
+            echo "<script>alert('Você não tem permissão para excluir esta reserva. Solicite ao seu Head!'); window.location.href='listagem.php';</script>";
         }
     } else {
         echo "<script>alert('Reserva não encontrada.'); window.location.href='listagem.php';</script>";

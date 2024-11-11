@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "Erro ao excluir a reserva: " . $stmt->error;
             }
         } else {
-            echo "Acesso negado. Você não tem permissão para excluir esta reserva000.";
+            echo "Acesso negado. Você não tem permissão para excluir esta reserva. Solicite ao seu Head!";
         }
     } else {
         echo "Reserva não encontrada.";

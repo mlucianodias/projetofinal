@@ -37,6 +37,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             $mensagem = "Senha alterada com sucesso!";
         }
+    } elseif (isset($_POST['acao']) && $_POST['acao'] === 'alterar_nome') {
+        $id = intval($_POST['id']);
+        $novoNome = $_POST['novo_nome'];
+        $stmt = $conn->prepare("UPDATE usuarios SET nome = ? WHERE id = ?");
+        $stmt->bind_param("si", $novoNome, $id);
+        if ($stmt->execute()) {
+            $mensagem = "Nome do usuário alterado com sucesso!";
+        }
     }
 }
 
@@ -67,7 +75,7 @@ $usuarios = $conn->query("SELECT * FROM usuarios ORDER BY nome");
         <div class="mb-3">
             <label for="senha" class="form-label">Senha</label>
             <input type="password" id="senha" name="senha" class="form-control" required>
-            <input type="checkbox" onclick="togglePassword()"> Mostrar Senha
+            <input type="checkbox" onclick="togglePassword('senha')"> Mostrar Senha
         </div>
        
         <button type="submit" class="btn btn-primary">Cadastrar Usuário</button>
@@ -94,7 +102,10 @@ $usuarios = $conn->query("SELECT * FROM usuarios ORDER BY nome");
                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirma a exclusão deste usuário?');">Excluir</button>
                         </form>
+
                         <button class="btn btn-warning btn-sm" onclick="document.getElementById('alterar-senha-<?= $user['id'] ?>').style.display='block'">Alterar Senha</button>
+                        <button class="btn btn-info btn-sm" onclick="document.getElementById('alterar-nome-<?= $user['id'] ?>').style.display='block'">Alterar Nome</button>
+                        
                         <div id="alterar-senha-<?= $user['id'] ?>" style="display:none;">
                             <form method="POST" class="mt-2">
                                 <input type="hidden" name="acao" value="alterar_senha">
@@ -102,10 +113,23 @@ $usuarios = $conn->query("SELECT * FROM usuarios ORDER BY nome");
                                 <div class="mb-3">
                                     <label for="nova_senha_<?= $user['id'] ?>" class="form-label">Nova Senha</label>
                                     <input type="password" id="nova_senha_<?= $user['id'] ?>" name="nova_senha" class="form-control" required>
-                                    <input type="checkbox" onclick="togglePassword()"> Mostrar Senha
+                                    <input type="checkbox" onclick="togglePassword('nova_senha_<?= $user['id'] ?>')"> Mostrar Senha
                                 </div>                                
-                                <button type="submit" class="btn btn-success ">Salvar Senha</button>
-                                <button type="submit" class="btn btn-danger">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Salvar Senha</button>
+                                <button type="button" class="btn btn-danger" onclick="document.getElementById('alterar-senha-<?= $user['id'] ?>').style.display='none'">Cancelar</button>
+                            </form>
+                        </div>
+
+                        <div id="alterar-nome-<?= $user['id'] ?>" style="display:none;">
+                            <form method="POST" class="mt-2">
+                                <input type="hidden" name="acao" value="alterar_nome">
+                                <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                <div class="mb-3">
+                                    <label for="novo_nome_<?= $user['id'] ?>" class="form-label">Novo Nome</label>
+                                    <input type="text" id="novo_nome_<?= $user['id'] ?>" name="novo_nome" class="form-control" required>
+                                </div>                                
+                                <button type="submit" class="btn btn-success">Salvar Nome</button>
+                                <button type="button" class="btn btn-danger" onclick="document.getElementById('alterar-nome-<?= $user['id'] ?>').style.display='none'">Cancelar</button>
                             </form>
                         </div>
                     </td>
@@ -117,9 +141,9 @@ $usuarios = $conn->query("SELECT * FROM usuarios ORDER BY nome");
     <a href="index.php" class="btn btn-secondary mt-3">Voltar ao Painel de Reservas</a>
 
     <script>
-        function togglePassword() {
-            var senha = document.getElementById("senha");
-            senha.type = senha.type === "password" ? "text" : "password";
+        function togglePassword(elementId) {
+            var element = document.getElementById(elementId);
+            element.type = element.type === "password" ? "text" : "password";
         }
     </script>
 </body>

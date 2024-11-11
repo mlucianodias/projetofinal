@@ -21,7 +21,7 @@ $reserva = $result->fetch_assoc();
 
 // Verifica se o usuário logado é o criador da reserva ou um administrador
 if ($reserva['user_id'] != $_SESSION["user_id"] && !$_SESSION["is_admin"]) {
-    echo "<script>alert('Você não tem permissão para alterar essa reserva.'); window.location.href='listagem.php';</script>";
+    echo "<script>alert('Você não tem permissão para alterar essa reserva. Solicite ao seu Head!'); window.location.href='listagem.php';</script>";
     exit;
 }
 
@@ -34,14 +34,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sala = $_POST['sala'];
     $finalidade = $_POST['finalidade'];
 
-    $sql = "UPDATE reservas SET nome = ?, data = ?, hora_inicio = ?, hora_fim = ?, sala = ?, finalidade = ? WHERE id = ?";
+    // Verifica a disponibilidade da sala na data e horário escolhidos
+    $sql = "SELECT * FROM reservas WHERE data = ? AND sala = ? AND id != ? AND 
+            ((hora_inicio < ? AND hora_fim > ?) OR 
+             (hora_inicio < ? AND hora_fim > ?))";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssi", $nome, $dataReserva, $horaInicio, $horaFim, $sala, $finalidade, $id);
+    $stmt->bind_param("ssissss", $dataReserva, $sala, $id, $horaFim, $horaInicio, $horaInicio, $horaFim);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt->execute()) {
-        $mensagem = "Reserva atualizada com sucesso!";
+    if ($result->num_rows > 0) {
+        $mensagem = "Conflito de horário! A sala já está reservada nesse horário. Escolha outro horário ou verifique as reservas.";
     } else {
-        $mensagem = "Erro ao atualizar reserva: " . $stmt->error;
+        // Atualiza a reserva no banco de dados
+        $sql = "UPDATE reservas SET nome = ?, data = ?, hora_inicio = ?, hora_fim = ?, sala = ?, finalidade = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssi", $nome, $dataReserva, $horaInicio, $horaFim, $sala, $finalidade, $id);
+
+        if ($stmt->execute()) {
+            $mensagem = "Reserva atualizada com sucesso!";
+        } else {
+            $mensagem = "Erro ao atualizar reserva: " . $stmt->error;
+        }
     }
 }
 
@@ -57,7 +71,6 @@ $salasDisponiveis = ['Sala do Pastor', 'Sala Kids 04 a 06 anos', 'Sala Kids 07 a
 $finalidades = ['Aconselhamento', 'Cursos', 'Ensaios', 'Reunião Mensal', 'Reunião Quinzenal', 'GC'];
 ?>
 
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -70,7 +83,9 @@ $finalidades = ['Aconselhamento', 'Cursos', 'Ensaios', 'Reunião Mensal', 'Reuni
     <h1>Editar Reserva</h1>
 
     <?php if ($mensagem): ?>
-        <div class="alert alert-success"><?= $mensagem ?></div>
+        <div class="alert alert-<?= strpos($mensagem, 'sucesso') !== false ? 'success' : 'danger' ?>">
+            <?= $mensagem ?>
+        </div>
     <?php endif; ?>
 
     <form action="editar.php?id=<?= $id ?>" method="post">
