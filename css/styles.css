@@ -5,6 +5,31 @@
     box-sizing: border-box;
 }
 
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.btn-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.logout-btn, .btn-primary, .btn-danger {
+    width: 100%;
+}
+
+
 h1 {
     font-size: 30px;
     color: #333;

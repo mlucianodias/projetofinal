@@ -42,12 +42,12 @@ if (!isset($_SESSION["logado"])) {
                     <option value="Sala do Pastor">Sala do Pastor</option>
                     <option value="Sala Kids 04 a 06 anos">Sala Kids 04 a 06 anos</option>
                     <option value="Sala Kids 07 a 09 anos">Sala Kids 07 a 09 anos</option>
-                    <option value="Sala do Link 10 a 13 anos">Sala Link 10 a 13 anos</option>
+                    <option value="Sala Link 10 a 13 anos">Sala Link 10 a 13 anos</option>
                     <option value="Templo">Templo</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="sala" class="form-label">Finalidade da reserva:</label>
+                <label for="finalidade" class="form-label">Finalidade da reserva:</label>
                 <select id="finalidade" name="finalidade" class="form-select" required>
                     <option value="">Selecione uma sala</option>
                     <option value="Aconselhamento">Aconselhamento</option>
@@ -62,8 +62,11 @@ if (!isset($_SESSION["logado"])) {
             <a href="listagem.php" class="btn btn-link d-block text-center mt-2">Ver salas reservadas</a>
         </form>
     </div>
+    <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) : ?>
+        <a href="cadastro.php" class="btn btn-success mt-3">Cadastrar Novo Usuário</a>
+    <?php endif; ?>
     <footer class="mt-auto text-center">
-    <a href="logout.php" class="btn btn-danger logout-btn">Logout</a>
+        <a href="logout.php" class="btn btn-danger logout-btn">Logout</a>
     </footer>
     <script src="js/index.js"></script>
 </body>

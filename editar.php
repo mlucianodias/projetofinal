@@ -11,8 +11,22 @@ require_once 'config.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $mensagem = '';
 
+// Carrega dados da reserva para verificar o criador
+$sql = "SELECT * FROM reservas WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$reserva = $result->fetch_assoc();
+
+// Verifica se o usuário logado é o criador da reserva ou um administrador
+if ($reserva['user_id'] != $_SESSION["user_id"] && !$_SESSION["is_admin"]) {
+    echo "<script>alert('Você não tem permissão para alterar essa reserva.'); window.location.href='listagem.php';</script>";
+    exit;
+}
+
+// Lógica para atualizar reserva
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtém dados do formulário
     $nome = $_POST['nome'];
     $dataReserva = $_POST['dataReserva'];
     $horaInicio = $_POST['horaInicio'];
@@ -20,39 +34,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sala = $_POST['sala'];
     $finalidade = $_POST['finalidade'];
 
-    // Atualiza a reserva no banco de dados
     $sql = "UPDATE reservas SET nome = ?, data = ?, hora_inicio = ?, hora_fim = ?, sala = ?, finalidade = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssi", $nome, $dataReserva, $horaInicio, $horaFim, $sala, $finalidade, $id); // Corrigido para 'ssssssi'
-
+    $stmt->bind_param("ssssssi", $nome, $dataReserva, $horaInicio, $horaFim, $sala, $finalidade, $id);
 
     if ($stmt->execute()) {
         $mensagem = "Reserva atualizada com sucesso!";
     } else {
         $mensagem = "Erro ao atualizar reserva: " . $stmt->error;
     }
-} else {
-    // Carrega dados da reserva se o método for GET
-    $sql = "SELECT * FROM reservas WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $reserva = $result->fetch_assoc();
-
-    // Atribui os valores da reserva às variáveis
-    $nome = $reserva['nome'];
-    $dataReserva = $reserva['data'];
-    $horaInicio = $reserva['hora_inicio'];
-    $horaFim = $reserva['hora_fim'];
-    $sala = $reserva['sala'];
-    $finalidade = $reserva['finalidade'];
 }
 
-// Carrega a lista de salas e finalidades para o menu suspenso
+// Atribui os valores da reserva às variáveis
+$nome = $reserva['nome'];
+$dataReserva = $reserva['data'];
+$horaInicio = $reserva['hora_inicio'];
+$horaFim = $reserva['hora_fim'];
+$sala = $reserva['sala'];
+$finalidade = $reserva['finalidade'];
+
 $salasDisponiveis = ['Sala do Pastor', 'Sala Kids 04 a 06 anos', 'Sala Kids 07 a 09 anos', 'Sala Link 10 a 13 anos', 'Templo'];
 $finalidades = ['Aconselhamento', 'Cursos', 'Ensaios', 'Reunião Mensal', 'Reunião Quinzenal', 'GC'];
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">

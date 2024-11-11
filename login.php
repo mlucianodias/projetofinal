@@ -1,22 +1,33 @@
 <?php
 session_start();
-
-$usuario_valido = "admin";
-$senha_valida = "1234";
+require_once 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_POST["usuario"];
-    $senha = $_POST["senha"];
+    $senha = md5($_POST["senha"]);
 
-    if ($usuario === $usuario_valido && $senha === $senha_valida) {
+    $sql = "SELECT * FROM usuarios WHERE nome = ? AND senha = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $usuario, $senha);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
         $_SESSION["logado"] = true;
+        $_SESSION["user_id"] = $user["id"]; // Armazenar o ID do usuário
+        $_SESSION["is_admin"] = $user["is_admin"];
+        $_SESSION["nome"] = $user["nome"]; 
         header("Location: index.php");
         exit;
     } else {
         $erro = "Usuário ou senha incorretos!";
     }
 }
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
