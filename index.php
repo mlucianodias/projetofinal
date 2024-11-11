@@ -46,6 +46,18 @@ if (!isset($_SESSION["logado"])) {
                     <option value="Templo">Templo</option>
                 </select>
             </div>
+            <div class="mb-3">
+                <label for="sala" class="form-label">Finalidade da reserva:</label>
+                <select id="finalidade" name="finalidade" class="form-select" required>
+                    <option value="">Selecione uma sala</option>
+                    <option value="Aconselhamento">Aconselhamento</option>
+                    <option value="Cursos">Cursos</option>
+                    <option value="Ensaios">Ensaios</option>
+                    <option value="Reunião Mensal">Reunião Mensal</option>
+                    <option value="Reunião Quinzenal">Reunião Quinzenal</option>
+                    <option value="GC">GC</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary w-100">Reservar</button>
             <a href="listagem.php" class="btn btn-link d-block text-center mt-2">Ver salas reservadas</a>
         </form>

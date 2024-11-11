@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION["logado"])) {
+    header("Location: login.php");
+    exit;
+}
+
 require_once 'config.php';
 
 // Verifica se o ID foi passado e obtém os dados da reserva
@@ -12,11 +18,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $horaInicio = $_POST['horaInicio'];
     $horaFim = $_POST['horaFim'];
     $sala = $_POST['sala'];
+    $finalidade = $_POST['finalidade'];
 
     // Atualiza a reserva no banco de dados
-    $sql = "UPDATE reservas SET nome = ?, data = ?, hora_inicio = ?, hora_fim = ?, sala = ? WHERE id = ?";
+    $sql = "UPDATE reservas SET nome = ?, data = ?, hora_inicio = ?, hora_fim = ?, sala = ?, finalidade = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi", $nome, $dataReserva, $horaInicio, $horaFim, $sala, $id);
+    $stmt->bind_param("ssssssi", $nome, $dataReserva, $horaInicio, $horaFim, $sala, $finalidade, $id); // Corrigido para 'ssssssi'
+
 
     if ($stmt->execute()) {
         $mensagem = "Reserva atualizada com sucesso!";
@@ -38,10 +46,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $horaInicio = $reserva['hora_inicio'];
     $horaFim = $reserva['hora_fim'];
     $sala = $reserva['sala'];
+    $finalidade = $reserva['finalidade'];
 }
 
-// Carrega a lista de salas para o menu suspenso
-$salasDisponiveis = ['Sala do Pastor', 'Sala Kids 04 a 06 anos', 'Sala Kids 07 a 09 anos', 'Sala Link 10 a 13 anos', 'Templo']; // Exemplo, modifique conforme as salas do sistema
+// Carrega a lista de salas e finalidades para o menu suspenso
+$salasDisponiveis = ['Sala do Pastor', 'Sala Kids 04 a 06 anos', 'Sala Kids 07 a 09 anos', 'Sala Link 10 a 13 anos', 'Templo'];
+$finalidades = ['Aconselhamento', 'Cursos', 'Ensaios', 'Reunião Mensal', 'Reunião Quinzenal', 'GC'];
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +96,17 @@ $salasDisponiveis = ['Sala do Pastor', 'Sala Kids 04 a 06 anos', 'Sala Kids 07 a
                 <?php foreach ($salasDisponiveis as $salaDisponivel): ?>
                     <option value="<?= htmlspecialchars($salaDisponivel) ?>" <?= $sala === $salaDisponivel ? 'selected' : '' ?>>
                         <?= htmlspecialchars($salaDisponivel) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="finalidade" class="form-label">Finalidade da reserva</label>
+            <select id="finalidade" name="finalidade" class="form-select" required>
+                <?php foreach ($finalidades as $finalidadeOp): ?>
+                    <option value="<?= htmlspecialchars($finalidadeOp) ?>" <?= $finalidade === $finalidadeOp ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($finalidadeOp) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
