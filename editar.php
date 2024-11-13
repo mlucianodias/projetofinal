@@ -68,7 +68,7 @@ $sala = $reserva['sala'];
 $finalidade = $reserva['finalidade'];
 
 $salasDisponiveis = ['Sala do Pastor', 'Sala Kids 04 a 06 anos', 'Sala Kids 07 a 09 anos', 'Sala Link 10 a 13 anos', 'Templo'];
-$finalidades = ['Aconselhamento', 'Cursos', 'Ensaios', 'Reunião Mensal', 'Reunião Quinzenal', 'GC'];
+$finalidades = ['Aconselhamento', 'Confraternização','Cursos', 'Ensaios','GC', 'Reunião Mensal', 'Reunião Quinzenal'];
 ?>
 
 <!DOCTYPE html>

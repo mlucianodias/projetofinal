@@ -1,3 +1,20 @@
+document.getElementById('formReserva').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    fetch('processar-dados.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+        this.reset();
+    })
+    .catch(error => console.error('Erro:', error));
+});
+
+
 /* document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formReserva');
 
@@ -25,28 +42,6 @@
         }
     });
 }); */
-
-document.getElementById('formReserva').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-    fetch('processar-dados.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text())
-    .then(data => {
-        alert(data);
-        this.reset();
-    })
-    .catch(error => console.error('Erro:', error));
-});
-
-
-
-
-
-
 
 
 

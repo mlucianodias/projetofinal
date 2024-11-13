@@ -12,7 +12,7 @@ if (!isset($_SESSION["logado"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>Reserva de Sala</title>
 </head>
 <body class="d-flex flex-column min-vh-100 align-items-center justify-content-center">
@@ -51,11 +51,12 @@ if (!isset($_SESSION["logado"])) {
                 <select id="finalidade" name="finalidade" class="form-select" required>
                     <option value="">Selecione uma sala</option>
                     <option value="Aconselhamento">Aconselhamento</option>
+                    <option value="Confraternização">Confraternização</option>
                     <option value="Cursos">Cursos</option>
                     <option value="Ensaios">Ensaios</option>
+                    <option value="GC">GC</option>
                     <option value="Reunião Mensal">Reunião Mensal</option>
                     <option value="Reunião Quinzenal">Reunião Quinzenal</option>
-                    <option value="GC">GC</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary w-100">Reservar</button>
@@ -63,12 +64,14 @@ if (!isset($_SESSION["logado"])) {
         </form>
     </div>
     
-    <footer class="mt-auto text-center">
-    <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) : ?>
-        <a href="cadastro.php" class="btn btn-success mt-2">Cadastrar Novo Usuário</a>
-    <?php endif; ?>
-        <a href="logout.php" class="btn btn-danger logout-btn mt-2">Logout</a>
-    </footer>
+    <!-- Centralização dos botões de Logout e Cadastro -->
+    <div class="d-flex justify-content-center mt-3">
+        <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) : ?>
+            <a href="cadastro.php" class="btn btn-success me-2">Cadastrar Novo Usuário</a>
+        <?php endif; ?>
+        <a href="logout.php" class="btn btn-danger <?php echo isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? '' : 'w-100'; ?>">Logout</a>
+    </div>
+    
     <script src="js/index.js"></script>
 </body>
 </html>

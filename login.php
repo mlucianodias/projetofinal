@@ -35,10 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <title>Login - Reserva de Salas</title>
 </head>
-<body class="d-flex align-items-center justify-content-center vh-100">
+<body class="d-flex flex-column align-items-center justify-content-center vh-100">
     <div class="login-container p-4 rounded shadow-sm text-center">
         <h2>Acesso ao Sistema de Reservas</h2>
         <form action="login.php" method="post" class="mt-3">
@@ -54,6 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="btn btn-primary w-100">Entrar</button>
         </form>
     </div>
-    <footer>Powered by Luciano</footer>
+    <footer class="mt-2 text-center">
+        <p class="text-muted">Powered by Luciano Dias</p>
+    </footer>
 </body>
 </html>
