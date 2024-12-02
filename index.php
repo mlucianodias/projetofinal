@@ -69,7 +69,8 @@ if (!isset($_SESSION["logado"])) {
         <?php if (isset($_SESSION["is_admin"]) && $_SESSION["is_admin"]) : ?>
             <a href="cadastro.php" class="btn btn-success me-2">Cadastrar Novo Usuário</a>
         <?php endif; ?>
-        <a href="logout.php" class="btn btn-danger <?php echo isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? '' : 'w-100'; ?>">Logout</a>
+        <a href="logout.php" class="btn btn-danger me-2" <?php echo isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? '' : 'w-100'; ?>>Logout</a>
+        <a href="dashboard.php" class="btn btn-secondary me-2">Voltar ao Dashboard</a>
     </div>
     
     <script src="js/index.js"></script>

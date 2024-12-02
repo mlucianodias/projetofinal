@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["user_id"] = $user["id"]; // Armazenar o ID do usuário
         $_SESSION["is_admin"] = $user["is_admin"];
         $_SESSION["nome"] = $user["nome"]; 
-        header("Location: index.php");
+        header("Location: dashboard.php");
         exit;
     } else {
         $erro = "Usuário ou senha incorretos!";
