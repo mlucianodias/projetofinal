@@ -62,7 +62,7 @@ $temPermissao = in_array($usuarioLogadoId, $usuariosPermitidos);
             <p class="text-center text-danger">Você não tem permissão para realizar reservas.</p>
         <?php endif; ?>
 
-        <a href="listagem-cozinha.php" class="btn btn-link mt-2">Ver reservas da cozinha</a>
+        <a href="listagem-cozinha.php" class="btn btn-link d-block text-center mt-2">Ver reservas da cozinha</a>
     </div>
     <div class="d-flex justify-content-center mt-3">
         <a href="../logout.php" class="btn btn-danger me-2">Logout</a>
