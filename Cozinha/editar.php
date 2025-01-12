@@ -43,43 +43,27 @@ if (!$temPermissaoGlobal && $reserva['user_id'] != $usuarioLogadoId) {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = $_POST['nome'];
     $dataReserva = $_POST['dataReserva'];
-    $horaInicio = $_POST['horaInicio'];
-    $horaFim = $_POST['horaFim'];
+    $periodo = $_POST['periodo'] ?? '';
     $finalidade = $_POST['finalidade'];
 
-    // Verifica conflitos de horário na mesma data
-    $sql = "SELECT * FROM reservas_cozinha 
-            WHERE data_reserva = ? AND id != ? 
-              AND ((hora_inicio < ? AND hora_fim > ?) OR 
-                   (hora_inicio < ? AND hora_fim > ?))";
+    // Atualiza a reserva no banco de dados
+    $sql = "UPDATE reservas_cozinha 
+            SET nome = ?, data_reserva = ?, periodo = ?, finalidade = ? 
+            WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sissss", $dataReserva, $id, $horaFim, $horaInicio, $horaInicio, $horaFim);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->bind_param("ssssi", $nome, $dataReserva, $periodo, $finalidade, $id);
 
-    if ($result->num_rows > 0) {
-        echo "<script>alert('Conflito de horário! A cozinha já está reservada neste horário.');</script>";
+    if ($stmt->execute()) {
+        echo "<script>alert('Reserva atualizada com sucesso!'); window.location.href='listagem-cozinha.php';</script>";
     } else {
-        // Atualiza a reserva no banco de dados
-        $sql = "UPDATE reservas_cozinha 
-                SET nome = ?, data_reserva = ?, hora_inicio = ?, hora_fim = ?, finalidade = ? 
-                WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssi", $nome, $dataReserva, $horaInicio, $horaFim, $finalidade, $id);
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Reserva atualizada com sucesso!'); window.location.href='listagem-cozinha.php';</script>";
-        } else {
-            echo "<script>alert('Erro ao atualizar reserva: " . $stmt->error . "');</script>";
-        }
+        echo "<script>alert('Erro ao atualizar reserva: " . $stmt->error . "');</script>";
     }
 }
 
 // Preenche os dados no formulário
 $nome = $reserva['nome'];
-$dataReserva = $reserva['data_reserva']; // Corrigido para data_reserva
-$horaInicio = $reserva['hora_inicio'];
-$horaFim = $reserva['hora_fim'];
+$dataReserva = $reserva['data_reserva'];
+$periodoSelecionado = $reserva['periodo'];
 $finalidade = $reserva['finalidade'];
 
 $finalidades = ['Kids', 'Gerações', 'Louvor', 'Diaconato', 'Midia', 'Hero', 'Shine'];
@@ -105,12 +89,19 @@ $finalidades = ['Kids', 'Gerações', 'Louvor', 'Diaconato', 'Midia', 'Hero', 'S
             <input type="date" id="dataReserva" name="dataReserva" class="form-control" required value="<?= $dataReserva ?>">
         </div>
         <div class="mb-3">
-            <label for="horaInicio" class="form-label">Hora de Início</label>
-            <input type="time" id="horaInicio" name="horaInicio" class="form-control" required value="<?= $horaInicio ?>">
-        </div>
-        <div class="mb-3">
-            <label for="horaFim" class="form-label">Hora de Término</label>
-            <input type="time" id="horaFim" name="horaFim" class="form-control" required value="<?= $horaFim ?>">
+            <label class="form-label">Período do Evento:</label><br>
+            <div>
+                <input type="radio" id="manha" name="periodo" value="Manhã" <?= $periodoSelecionado === 'Manhã' ? 'checked' : '' ?>>
+                <label for="manha">Manhã</label>
+            </div>
+            <div>
+                <input type="radio" id="noite" name="periodo" value="Noite" <?= $periodoSelecionado === 'Noite' ? 'checked' : '' ?>>
+                <label for="noite">Noite</label>
+            </div>
+            <div>
+                <input type="radio" id="ambos" name="periodo" value="Ambos" <?= $periodoSelecionado === 'Ambos' ? 'checked' : '' ?>>
+                <label for="ambos">Ambos</label>
+            </div>
         </div>
         <div class="mb-3">
             <label for="finalidade" class="form-label">Finalidade</label>

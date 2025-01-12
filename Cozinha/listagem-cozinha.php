@@ -3,7 +3,7 @@ session_start();
 require_once '../config.php';
 
 // Remove reservas expiradas automaticamente
-$sql = "DELETE FROM reservas_cozinha WHERE data_reserva < CURDATE() OR (data_reserva = CURDATE() AND hora_fim < CURTIME())";
+$sql = "DELETE FROM reservas_cozinha WHERE data_reserva < CURDATE()";
 $conn->query($sql);
 
 if (!isset($_SESSION["logado"])) {
@@ -12,14 +12,12 @@ if (!isset($_SESSION["logado"])) {
 }
 
 // Lista de usuários com permissão para criar, editar e excluir
-$usuariosPermitidos = [1, 7, 17]; // IDs dos usuários permitidos
+$usuariosPermitidos = [1, 7, 17];
 $usuarioLogadoId = $_SESSION['user_id'];
 $temPermissao = in_array($usuarioLogadoId, $usuariosPermitidos);
 
-$sql = "SELECT * FROM reservas_cozinha ORDER BY data_reserva, hora_inicio";
+$sql = "SELECT * FROM reservas_cozinha ORDER BY data_reserva";
 $result = $conn->query($sql);
-
-// Conta o total de reservas filtradas
 $totalReservas = $result->num_rows;
 ?>
 
@@ -39,8 +37,7 @@ $totalReservas = $result->num_rows;
             <tr>
                 <th>Nome</th>
                 <th>Data</th>
-                <th>Início</th>
-                <th>Término</th>
+                <th>Período</th>
                 <th>Finalidade</th>
                 <?php if ($temPermissao): ?>
                     <th>Ações</th>
@@ -52,14 +49,11 @@ $totalReservas = $result->num_rows;
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <?php
                     $dataFormatada = DateTime::createFromFormat('Y-m-d', $row["data_reserva"])->format('d/m/Y');
-                    $horaInicioFormatada = DateTime::createFromFormat('H:i:s', $row["hora_inicio"])->format('H:i');
-                    $horaFimFormatada = DateTime::createFromFormat('H:i:s', $row["hora_fim"])->format('H:i');
                     ?>
                     <tr>
                         <td><?= htmlspecialchars($row["nome"]) ?></td>
                         <td><?= htmlspecialchars($dataFormatada) ?></td>
-                        <td><?= htmlspecialchars($horaInicioFormatada) ?></td>
-                        <td><?= htmlspecialchars($horaFimFormatada) ?></td>
+                        <td><?= htmlspecialchars($row["periodo"]) ?></td>
                         <td><?= htmlspecialchars($row["finalidade"]) ?></td>
                         <?php if ($temPermissao): ?>
                             <td>
@@ -71,18 +65,14 @@ $totalReservas = $result->num_rows;
                 <?php endwhile; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="<?= $temPermissao ? '6' : '5' ?>" class="text-center">Nenhuma reserva encontrada.</td>
+                    <td colspan="<?= $temPermissao ? '5' : '4' ?>" class="text-center">Nenhuma reserva encontrada.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
 
     <?php if ($temPermissao): ?>
-        <!-- Botão visível apenas para usuários com permissão -->
         <a href="reservas_cozinha.php" class="btn btn-primary">Fazer Nova Reserva</a>
-    <?php else: ?>
-        <!-- Botão de voltar para usuários sem permissão -->
-        <a href="../dashboard.php" class="btn btn-secondary">Voltar</a>
     <?php endif; ?>
 </body>
 </html>

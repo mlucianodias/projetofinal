@@ -6,7 +6,7 @@ if (!isset($_SESSION["logado"])) {
 }
 
 // Lista de usuários com permissão para criar, editar e excluir
-$usuariosPermitidos = [1, 7, 17]; // IDs dos usuários: Luciano (1), Carlos (2), Wander (3)
+$usuariosPermitidos = [1, 7, 17];
 $usuarioLogadoId = $_SESSION['user_id'];
 $temPermissao = in_array($usuarioLogadoId, $usuariosPermitidos);
 
@@ -25,8 +25,7 @@ $temPermissao = in_array($usuarioLogadoId, $usuariosPermitidos);
         <h1 class="mb-4 text-center">Reservas da Cozinha</h1>
         
         <?php if ($temPermissao): ?>
-            <!-- Formulário ativo apenas para usuários permitidos -->
-            <form class="form_Reserva" id="formReserva" action="processar-dados-cozinha.php" method="post">
+            <form id="formReserva" action="processar-dados-cozinha.php" method="post">
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome do Requisitante:</label>
                     <input type="text" id="nome" name="nome" class="form-control" required>
@@ -36,12 +35,13 @@ $temPermissao = in_array($usuarioLogadoId, $usuariosPermitidos);
                     <input type="date" id="dataReserva" name="dataReserva" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="horaInicio" class="form-label">Horário de Início:</label>
-                    <input type="time" id="horaInicio" name="horaInicio" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="horaFim" class="form-label">Horário de Término:</label>
-                    <input type="time" id="horaFim" name="horaFim" class="form-control" required>
+                    <label class="form-label">Período:</label><br>
+                    <input type="radio" id="manha" name="periodo" value="Manhã" required>
+                    <label for="manha">Manhã</label><br>
+                    <input type="radio" id="noite" name="periodo" value="Noite" required>
+                    <label for="noite">Noite</label><br>
+                    <input type="radio" id="ambos" name="periodo" value="Ambos" required>
+                    <label for="ambos">Ambos</label>
                 </div>
                 <div class="mb-3">
                     <label for="finalidade" class="form-label">Finalidade da reserva:</label>
@@ -59,17 +59,14 @@ $temPermissao = in_array($usuarioLogadoId, $usuariosPermitidos);
                 <button type="submit" class="btn btn-primary w-100">Reservar cozinha</button>
             </form>
         <?php else: ?>
-            <p class="text-center text-danger">Você não tem permissão para realizar reservas.<br>Para solicitar novas reservas,<br>fale com o Wander.</p>
+            <p class="text-center text-danger">Você não tem permissão para realizar reservas.</p>
         <?php endif; ?>
 
-        <a href="listagem-cozinha.php" class="btn btn-link d-block text-center mt-2">Ver reservas da cozinha</a>
+        <a href="listagem-cozinha.php" class="btn btn-link mt-2">Ver reservas da cozinha</a>
     </div>
-    
     <div class="d-flex justify-content-center mt-3">
         <a href="../logout.php" class="btn btn-danger me-2">Logout</a>
-        <a href="../dashboard.php" class="btn btn-secondary me-2">Voltar ao Dashboard</a>
+        <a href="../dashboard.php" class="btn btn-secondary">Voltar ao Dashboard</a>
     </div>
-    
-    <script src="js/index.js"></script>
 </body>
 </html>
